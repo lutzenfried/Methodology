@@ -1030,7 +1030,7 @@ On domain controller (up to Windows Server 2019) if you create a computer accoun
 
 --> This will set the computer account password to default password that matches the first 14 characters of their computer name, lowercase and without a dollar sign.
 
-<img src="./images/timeroasting.png" width="450"/>
+<img src="./images/timeroasting.png" width="700"/>
 
 ### MS14-066
 
