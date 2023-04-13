@@ -51,6 +51,7 @@
       - [Juicy Potato](#juicy-potato)
       - [Hot Potato](#hot-potato)
       - [Sweet Potato](#sweet-potato)
+      - [God Potato](#god-potato)
     - [RPC Misc](#rpc-misc)
         - [AD user password modification using rpcclient](#ad-user-password-modification-using-rpcclient)
         - [RPC password spraying](#rpc-password-spraying)
@@ -598,6 +599,9 @@ https://www.pentestpartners.com/security-blog/sweetpotato-service-to-system/
 
 
 https://www.ctfnote.com/red-teaming/privilege-escalation/windows-privilege-escalation/token-impersonation-and-potato-attacks
+
+#### God Potato
+https://github.com/BeichenDream/GodPotato
 
 ### RPC Misc
 ##### AD user password modification using rpcclient  
