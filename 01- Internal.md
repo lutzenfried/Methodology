@@ -909,6 +909,8 @@ for group in $(rpcclient -U '' -N 10.10.0.10 -c enumdomgroups | grep Protected |
 - Members of this group cannot use NTLM
 - Kerberos ticket-granting tickets (TGTs) lifetime = 4 hours
 
+--> Restriction of the [Protected Users group is not complete](https://sensepost.com/blog/2023/protected-users-you-thought-you-were-safe-uh/) when it comes to the RID500 user of the Active Directory domain. We cannot connect using the NTLM authentication protocol but we can connect using the Kerberos authentication protocol with RC4.
+
 ### PAC
 Check if the DC is vulnerable to CVE-2021-42278 and CVE-2021-42287 to impersonate DA from standard domain user
 
