@@ -27,10 +27,10 @@
   - [Lateral movement](#lateral-movement)
       - [WMI Attacks – C2 Communication (WMI Class) – “Push” Attack](#wmi-attacks--c2-communication-wmi-class--push-attack)
       - [WMI Attacks – C2 Communication (Registry) – “Pull” Attack](#wmi-attacks--c2-communication-registry--pull-attack)
-      - [Command Execution Win32_Service](#command-execution-win32_service)
+      - [Command Execution Win32\_Service](#command-execution-win32_service)
   - [WMI Persistence](#wmi-persistence)
       - [Malicious WMI providers](#malicious-wmi-providers)
-      - [Win32_LocalAdmins provider](#win32_localadmins-provider)
+      - [Win32\_LocalAdmins provider](#win32_localadmins-provider)
       - [EvilNetConnection WMI Provider](#evilnetconnection-wmi-provider)
       - [EvilWMIProvider (SubTee)](#evilwmiprovider-subtee)
       - [WMI Backdoor](#wmi-backdoor)
@@ -45,11 +45,6 @@
       - [NoLimitSecu French Podcast dedicated to WMI](#nolimitsecu-french-podcast-dedicated-to-wmi)
       - [Andrei Dumitrescu - OCD](#andrei-dumitrescu---ocd)
       - [Backdoor with WMI](#backdoor-with-wmi)
-
-- Lateral movement
-- Information gathering
-- System modification and process execution
-- Backdoors and persistence
 
 ## WMI 101
 *WMI = Windows Management Instrumentation*  
@@ -788,7 +783,6 @@ The list of MOF files for autorecovery is stored here :
 WMI has an event infrastructure which provides the capability of receiving notifications and respond to changes happening on a system.  
 
 --> Synchronous and Asynchronous event queries can be created.  
-
 
 
 ## Resources
