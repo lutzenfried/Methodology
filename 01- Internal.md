@@ -150,6 +150,9 @@
     - [Active Directory NTDS : Clear Text passwords (Reversible encryption)](#active-directory-ntds--clear-text-passwords-reversible-encryption)
     - [DCSYNC](#dcsync)
     - [Accessing LSASS secrets](#accessing-lsass-secrets)
+      - [LSASS](#lsass)
+      - [Registry Secrets](#registry-secrets)
+      - [DPAPI](#dpapi)
         - [Lsassy](#lsassy)
     - [Bring Your Own Domain Controller](#bring-your-own-domain-controller)
   - [Misc : AD Audit](#misc--ad-audit)
@@ -1392,6 +1395,138 @@ Get-ADUser -Filter 'userAccountControl -band 128' -Properties userAccountControl
 - [Synacktiv - Dive Into MDI - DCsync detection bypass](https://www.synacktiv.com/publications/a-dive-into-microsoft-defender-for-identity.html)
 
 ### Accessing LSASS secrets
+[Windows Secrets Extraction - Summary](https://www.synacktiv.com/publications/windows-secrets-extraction-a-summary.html)
+- Secrets in LSASS process.
+- Secrets in registry such as LSA secrets.
+- DPAPI secrets.
+
+#### LSASS
+**Secrets retrieved From LSASS**
+- User / Machine$ (computer account) Hashes
+- Cleartest credentials (If Wdigest enabled)
+- Kerberos ticket (TGT and ST)
+- DPAPI cached keys
+
+**Protection**
+- RunAsPPL
+- Credential Guards
+
+**UserLand**
+- Lsassy --> Pypykatz
+- Nanodump
+
+**KernelLand**
+- https://www.loldrivers.io/
+- [Physmem2profit](https://github.com/WithSecureLabs/physmem2profit)
+- [EdrSandBlast](https://github.com/wavestone-cdt/EDRSandblast)
+- DumpIt
+  
+#### Registry Secrets
+**Secrets retrieved From registry**
+- SAM secrets (security Account Manager)
+- LSA secrets (Local Security Authority)
+  - DPAPI_SYSTEM
+  - NL$KM
+  - MsCache
+  - $MACHINE.ACC
+  - DEFAUTLPASSWORD
+- Software Secrets (ASP.NET, ...)
+
+```
+> reg save HKLM\SAM sam
+OR
+> vssadmin create shadow /for=C:
+> copy \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\Windows\System32\config\SAM SAM
+OR
+$ secretsdump.py -sam sam -security security -system system local
+```
+
+[SharpSecretsDump](https://github.com/laxa/SharpSecretsdump) : C# project used to mimic secretsdump.py from Impacket
+
+#### DPAPI
+- https://posts.specterops.io/operational-guidance-for-offensive-user-dpapi-abuse-1fb7fac8b107
+- https://posts.specterops.io/the-phantom-credentials-of-sccm-why-the-naa-wont-die-332ac7aa1ab9
+- https://www.passcape.com/index.php?section=docsys&cmd=details&id=28
+- https://www.insecurity.be/blog/2020/12/24/dpapi-in-depth-with-tooling-standalone-dpapi/
+- https://github.com/jordanbtucker/dpapick
+- https://www.synacktiv.com/publications/windows-secrets-extraction-a-summary.html
+- https://posts.specterops.io/the-phantom-credentials-of-sccm-why-the-naa-wont-die-332ac7aa1ab9
+- https://www.thehacker.recipes/ad/movement/credentials/dumping/dpapi-protected-secrets
+- https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation/dpapi-extracting-passwords
+- https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20DPAPI.md
+- https://github.com/Processus-Thief/HEKATOMB
+- https://www.login-securite.com/2022/03/04/don-papi-ou-lart-daller-plus-loin-que-le-avec-dpapi/
+- https://www.coresecurity.com/core-labs/articles/reading-dpapi-encrypted-keys-mimikatz
+- https://www.ired.team/offensive-security/credential-access-and-credential-dumping/reading-dpapi-encrypted-secrets-with-mimikatz-and-c++
+- https://z3r0th.medium.com/abusing-dpapi-40b76d3ff5eb
+- https://pentestlab.blog/tag/dpapi/
+- https://blog.sygnia.co/the-downfall-of-dpapis-top-secret-weapons
+- https://ppn.snovvcrash.rocks/pentest/infrastructure/ad/credential-harvesting/dpapi
+- https://www.youtube.com/watch?v=WSJjIsElJ3U
+  
+DPAPI - Data Protectgion API. When a software offers a "remember me" or "save credentials" feature, DPAPI is probably used to encrypt credentials before storing them. (Part of Crypt32.dll)  
+
+DPAPI use **2** main functions: [CryptUnprotectDat](https://learn.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptunprotectdata) and [CryptProtectData](https://learn.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptprotectdata).  
+
+DPAPI encryption mechanism relies on masterkeys (MK), used to encrypt the data. The Masterkeys are encrypted with a derivative from the user's password or the DPAPI system key.
+
+User masterkeys are located here:
+```
+C:\Users\<user>\AppData\Roaming\Protect\Microsoft\<SID>
+```
+
+Machine masterkeys are located here:
+```
+C:\Windows\System32\Microsoft\Protect\S-1-5-18\User
+C:\Windows\System32\Microsoft\Protect\S-1-5-18
+```
+
+Different types of secrets are encrypted using DPAPI:
+- Credentials
+```
+For User:
+PS C:\Users\lutzenfried> Get-ChildItem -Hidden C:\Users\lutzenfried\AppData\Local\Microsoft\Credentials\
+
+
+    Directory: C:\Users\lutzenfried\AppData\Local\Microsoft\Credentials
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a-hs-        2023-04-23   9:41 PM           4368 B81681331F8F01AA4D35198BE3BF510B
+-a-hs-        2023-03-01  11:01 AM          11104 DFBE70A7E5CC19A398EBF1B96859CE5D
+-a-hs-        2023-03-02  10:34 AM           1264 E05DBE15D38053457F3523A375594044
+
+For Systems:
+Get-ChildItem -Hidden C:/Windows/System32/config/systemprofile/AppData/Local/Microsoft/Credentials/
+```
+- Vault
+- DPAPI blob
+Wi-Fi credentials are stored as DPAPI blobs inside the following files:
+```
+Location: C:\ProgramData\Microsoft\Wlansvc\Profiles\Interfaces\*.xml
+
+> netsh wlan show profile
+
+> netsh wlan show profile SSID key=clear
+```
+- RSA / NGC
+
+--> As Domain Admin, you can extract the backup key that lets you decrypt any users' secrets.  
+Using Mimikatz
+```
+lsadump::backupkeys /system:dc01.offense.local /export
+```
+
+Using SharpDPAPI
+```
+SharpDPAPI.exe backupkey /nowrap
+```
+
+You will potentially sometimes be able to identify binary blob encrypted using DPAPI based on 62 bytes:
+```
+01 00 00 00 d0 8c 9d df  01 15 d1 11 8c 7a 00 c0 4f c2 97 eb 01 00 00 00  d2 87 4b 1d ab ce 3d 43 a7 c8 43 4d bf ca ee fa  00 00 00 00 02 00 00 00 00 00 10 66 00 00 00 01  00 00 20 00 00 00
+```
 
 ##### Lsassy
 - https://github.com/Hackndo/lsassy
@@ -1801,8 +1936,6 @@ https://github.com/ly4k/Certipy
 - adsecurity all
 - Wdigest
 - windows authentication cache (HKLM\SOFTWARE\Microsoft\WindowsNT\CurrentVersion\Winlogon\CachedLogonsCount)
-- LSASS
-- DPAPI
 - xfreerdp tool
 - Service accounts with interactive logon
 - Permissive Active Directory Domain Services https://blog.netspi.com/exploiting-adidns/
@@ -1811,13 +1944,19 @@ https://github.com/ly4k/Certipy
 - Pypykatz
 - Spraykatz
 - VLAN hopping
+- STP - network layer attacks
 - SNMP default
 - Potato family : https://hideandsec.sh/books/windows-sNL/page/in-the-potato-family-i-want-them-all
 - SMTP
 - ACL/DACL exploitation
 - Owner https://bloodhound.readthedocs.io/en/latest/data-analysis/edges.html#owns
 - Hekatomb tool (https://github.com/Processus-Thief/HEKATOMB)
+- SCCM
+  - https://labs.nettitude.com/blog/introducing-malsccm/
+  - https://www.scribd.com/document/204221426/Owning-One-Rule-All-v2#
+  - https://enigma0x3.net/2016/02/29/offensive-operations-with-powersccm/
+  - https://harmj4.rssing.com/chan-30881824/article40.html
 
-
-LAPS, JEA, WSL, RBCD, WDAC, ASR, AWL, Credential Guard, CLM, virtualization 
-
+- Protections
+LAPS, JEA, WSL, RBCD, WDAC, ASR, AWL,Kerberos Armoring, Compound Authentication, RunasPPL, RedForest (PAM),  Credential Guard, CLM, virtualization 
+- https://www.sstic.org/2017/presentation/administration_en_silo/
