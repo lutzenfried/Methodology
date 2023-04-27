@@ -44,7 +44,8 @@
     - [Identifying Quick Wins](#identifying-quick-wins)
     - [adPeas](#adpeas)
     - [Password spray](#password-spray)
-    - [LNK Files](#lnk-files)
+    - [Force Authentication](#force-authentication)
+      - [LNK Files](#lnk-files)
     - [Potatoes Attacks](#potatoes-attacks)
       - [Ghost potato](#ghost-potato)
       - [Remote Potato](#remote-potato)
@@ -60,6 +61,7 @@
     - [Abusing Vulnerable GPO](#abusing-vulnerable-gpo)
     - [Abusing MS-SQL Service](#abusing-ms-sql-service)
     - [Relay attacks](#relay-attacks)
+      - [Stealing NetNTLM hashes via outlook signatures](#stealing-netntlm-hashes-via-outlook-signatures)
     - [Drop the MIC CVE-2019-1040](#drop-the-mic-cve-2019-1040)
     - [Exploiting ACL over GPO](#exploiting-acl-over-gpo)
     - [Insecure LDAP: LDAPS / Signing / Channel Binding](#insecure-ldap-ldaps--signing--channel-binding)
@@ -562,7 +564,13 @@ spray.sh -smb 192.168.0.10 users.txt seasons.txt 3 15 corp.company.local NOUSERU
 
 - https://github.com/ShutdownRepo/smartbrute
 
-### LNK Files
+### Force Authentication
+- https://www.ired.team/offensive-security/initial-access/t1187-forced-authentication
+- https://www.mdsec.co.uk/2021/02/farming-for-red-teams-harvesting-netntlm/
+
+.SCF, .URL, .RTF, .XML, 
+  
+#### LNK Files
 If you get access to a share we can create a malicious .LNK file. This .LNK file will includes a refernece to the attacker computers.
 You can after choose to Relay the *NetNTLM* hash or crack it.
 
@@ -667,6 +675,11 @@ Import-Module .\powercat.ps1 powercat -l -v -p 443 -t 10000
 
 ### Relay attacks
 <img src="./images/smb_relay.png" width="700"/>
+
+#### Stealing NetNTLM hashes via outlook signatures
+- https://research.nccgroup.com/2021/01/15/sign-over-your-hashes-stealing-netntlm-hashes-via-outlook-signatures/
+- https://github.com/nccgroup/nccfsas/tree/main/Tools/Sigwhatever
+
 
 ### Drop the MIC CVE-2019-1040
 - https://securityboulevard.com/2019/06/drop-the-mic-cve-2019-1040/
@@ -1386,8 +1399,6 @@ Get-ADUser -Filter 'userAccountControl -band 128' -Properties userAccountControl
 - http://www.selfadsi.org/ads-attributes/user-userAccountControl.htm
 
 ### DCSYNC
-
-
 
 - [Primer on DCSync attack](https://www.alteredsecurity.com/post/a-primer-on-dcsync-attack-and-detection)
 - [ADSecurity - Mimikatz DCSync Usage, Exploitation, and Detection](https://adsecurity.org/?p=1729)
