@@ -1710,20 +1710,56 @@ hashcat -m 3000 -a 0 lm_hashes.txt ../../wordlists/rockyou_2021.txt
 ```
 
 #### NTLM hash
-Hashcat mask attack
+Hashcat mask attack: A mask attack is an evolution over the brute-force and allows us to be more selective over the keyspace in certain positions.  
 - https://hashcat.net/wiki/doku.php?id=mask_attack
 ```
-hashcat -m 1000 -a 3 ntds.dit.ntds ?u?l?l?l?l?d?d?d?d?s
+hashcat -m 1000 -a 3 ntds.dit ?u?l?l?l?l?d?d?d?d?s
+hashcat -m 1000 -a 3 ntds.dit Company?d?d?d?s
+```
+
+Mask attack using custom charset for specific characters:
+- 1 ?d?s defines a custom charset (digits and specials).
+- ?u?l?l?l?l?l?l?l?1 is the mask, where ?1 is the custom charset.
+```
+hashcat.exe -a 3 -m 1000 ntds.dit -1 ?d?s ?u?l?l?l?l?l?l?l?1
 ```
 
 Hashcat rule based cracking
 ```
-hashcat -m 1000 -a 0 --username ntds.dit.ntds ../../wordlists/rockyou_2021.txt -r ../../wordlists/OneRuleToRuleThemAll.rule
+hashcat -m 1000 -a 0 --username ntds.dit ../../wordlists/rockyou_2021.txt -r ../../wordlists/OneRuleToRuleThemAll.rule
 ```
 
 Hashcat wordlist cracking
 ```
-hashcat -m 1000 -a 0 --username ntds.dit.ntds ../../wordlists/rockyou_2021.txt
+hashcat -m 1000 -a 0 --username ntds.dit ../../wordlists/rockyou_2021.txt
+```
+
+Hashcat using mask length and mask files (hcmask)
+```
+lutzenfried@xec:~ cat ./test.hcmask
+?d?s,?u?l?l?l?l?1
+?d?s,?u?l?l?l?l?l?1
+?d?s,?u?l?l?l?l?l?l?1
+?d?s,?u?l?l?l?l?l?l?l?1
+?d?s,?u?l?l?l?l?l?l?l?l?1
+?d?s,?u?l?l?l?l?l?l?l?1?1
+?d?s,?u?l?l?l?l?l?l?1?1
+?d?s,?u?l?l?l?l?l?1?1
+?d?s,?u?l?l?l?l?1?1
+?d?s,?u?l?l?l?1?1?1
+?d?s,?u?l?l?l?l?1?1?1
+?d?s,?u?l?l?l?l?l?1?1?1
+?d?s,?u?l?l?l?l?l?l?1?1?1
+?d?s,?u?l?l?l?l?l?1?1?1?1
+?d?s,?u?l?l?l?l?1?1?1?1
+?d?s,?u?l?l?l?1?1?1?1
+?d?s,?u?l?l?1?1?1?1
+?d?s,?u?l?1?1?1?1?1
+?d?s,?u?l?l?1?1?1?1?1
+?d?s,?u?l?l?l?1?1?1?1?1
+?d?s,?u?l?l?l?l?1?1?1?1?1
+
+hashcat -m 1000 -a 3 -m 1000 NTDS.dit test.hcmask
 ```
 
 #### Net-NTLMv1
@@ -1764,11 +1800,45 @@ Slow to be cracked due to PBKDF2 usage (*PBKDF2(HMAC-SHA1, 10240, DCC1, username
 hashcat -m 2100 -a 0 DCC2_hashes.txt ../../wordlists/rockyou_2021.txt
 ```
 
+Within Hashcat other mode such as Hybrid (6 and 7) and Combinator (1) can be used:
+- Combinator will combine 2 dictionaries/wordlists
+```
+lutzenfried@xec:~ cat wordlist1.txt
+wifi
+wireless
 
+lutzenfried@xec:~ cat wordlist2.txt
+pass
+password
 
+# Some rule will be apply using -j and -k 
+hashcat -m 22000 PSK_capture.hccap wordlist1.txt wordlist2.txt -j $- -k $23
 
+wifi-pass23
+wireless-pass23
+wifi-pass23
+wifi-password23
+```
 
+- Hybrid: This mode will apply a mask to specific wordlist
+```
+lutzenfried@xec:~ cat wordlist.txt
+Pass
+Password
+Azerty
 
+hashcat.exe -a 6 -m 1000 NTDS.dit wordlist.txt ?d?d?d?d
+Pass0000
+Password0000
+Azerty0000
+```
+
+[Keyboard walks](https://bytesdarkly.com/2014/08/generating-keyboard-walks/) wordlists:  
+- https://github.com/hashcat/kwprocessor.git
+- https://github.com/Rich5/Keyboard-Walk-Generators
+```
+lutzenfried@xec:~ /tmp/kwprocessor ./kwp basechars/full.base keymaps/en-us.keymap routes/2-to-10-max-3-direction-changes.route -o key_walk_en_us_10_max.txt
+```
 
 
 ## Reporting / Collaborative
