@@ -115,8 +115,11 @@
     - [MS14-066](#ms14-066)
   - [Active Directory exploitation](#active-directory-exploitation)
     - [ZeroLogon](#zerologon-1)
+    - [Shadow Credential](#shadow-credential)
+    - [ShadowSpray](#shadowspray)
     - [Exploiting ADCS](#exploiting-adcs)
     - [ADCS WebDav + NTLM relay to LDAP](#adcs-webdav--ntlm-relay-to-ldap)
+    - [Adidns](#adidns)
     - [Exploiting machine accounts (WS01$)](#exploiting-machine-accounts-ws01)
     - [Over-Pass-The-hash](#over-pass-the-hash)
     - [Pass The ticket](#pass-the-ticket)
@@ -139,6 +142,7 @@
   - [comexec](#comexec)
       - [Detection](#detection-4)
   - [Persistence](#persistence)
+    - [AdminSDHolder](#adminsdholder)
     - [Primary Group ID](#primary-group-id)
     - [Dropping SPN on admin accounts](#dropping-spn-on-admin-accounts)
       - [Persistence in AD environment](#persistence-in-ad-environment)
@@ -1107,6 +1111,17 @@ hashcat -a 0 -m 3130 ntp_hashes ./wordlists/rockyou.txt
 
 ### ZeroLogon
 
+### Shadow Credential
+If an attacker can write to the **msDS-KeyCredentialLink** property of a user/computer, it is possible to retrieve the NT hash of that object.  
+
+- https://book.hacktricks.xyz/windows-hardening/active-directory-methodology/acl-persistence-abuse/shadow-credentials
+- https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab
+- https://www.ired.team/offensive-security-experiments/active-directory-kerberos-abuse/shadow-credentials
+- https://pentestlab.blog/2022/02/07/shadow-credentials/
+
+### ShadowSpray
+- https://book.hacktricks.xyz/windows-hardening/active-directory-methodology/acl-persistence-abuse/shadow-credentials#shadowspray
+
 ### Exploiting ADCS
 Find PKI Enrollment Services in Active Directory and Certificate Templates Names
 ```
@@ -1121,6 +1136,15 @@ certutil.exe -config - -ping
 ### ADCS WebDav + NTLM relay to LDAP
 - https://twitter.com/tifkin_/status/1418855927575302144/photo/1
 - https://www.ired.team/offensive-security-experiments/active-directory-kerberos-abuse/adcs-+-petitpotam-ntlm-relay-obtaining-krbtgt-hash-with-domain-controller-machine-certificate#rbcd-remote-computer-takeover
+
+### Adidns
+>  The Domain Services ACL can be hardened to prevent domain users from creating arbitrary records. This can be done by changing the security configuration for your DNS zones. On the server on which the service Domain Service is running, open the DNS Manager, and for each domain zone under which users are joined, remove the “Create all child objects” permission from the “Authenticated Users” group.
+
+- https://www.gosecure.net/blog/2019/02/20/abusing-unsafe-defaults-in-active-directory/
+- https://www.netspi.com/blog/technical/network-penetration-testing/exploiting-adidns/
+- https://www.netspi.com/blog/technical/network-penetration-testing/adidns-revisited/
+- https://ppn.snovvcrash.rocks/pentest/infrastructure/ad/adidns-abuse
+- 
 
 ### Exploiting machine accounts (WS01$)
 - https://pentestlab.blog/2022/02/01/machine-accounts/
@@ -1251,6 +1275,8 @@ smbclient //192.168.0.10/C$ -U corp.company.com/jdoe --pw-nt-hash <NT hash>
 
 ## Persistence
 
+### AdminSDHolder
+
 ### Primary Group ID
 
 The *primary group id* is a a user object attribute and contains *relative identifier* (RID) for the primary group of the user.  
@@ -1363,7 +1389,6 @@ $VerbosePreference = "Continue"
 
 1. Compromise an account with admin rights to admin server.
 2. Admin server computer account needs rights to Domain Controllers.
-
 
 ### Extract NTDS
 #### Extract NTDS without Admin priv
