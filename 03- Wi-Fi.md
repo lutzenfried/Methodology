@@ -43,7 +43,7 @@
     - [Guest Public IP VS Corporate Public IP](#guest-public-ip-vs-corporate-public-ip)
     - [Fake access point with internet access](#fake-access-point-with-internet-access)
 - [WEP](#wep)
-    - [Connecting using wpa_supplicant](#connecting-using-wpa_supplicant)
+    - [Connecting using wpa\_supplicant](#connecting-using-wpa_supplicant)
     - [Cracking WEP](#cracking-wep)
     - [Decrypt traffic](#decrypt-traffic)
     - [WEP Cracking alternative](#wep-cracking-alternative)
@@ -62,7 +62,7 @@
     - [Key Reinstallation Attack (KRACK)](#key-reinstallation-attack-krack)
     - [FRAG Attack](#frag-attack)
 - [WPA2 Enterprise](#wpa2-enterprise)
-    - [wpa_supplicant and EAP](#wpa_supplicant-and-eap)
+    - [wpa\_supplicant and EAP](#wpa_supplicant-and-eap)
   - [EAP Types](#eap-types)
       - [EAP-MD5](#eap-md5)
       - [EAP-PAP](#eap-pap)
@@ -117,6 +117,7 @@
       - [OpenWRT Compatibles routers](#openwrt-compatibles-routers)
       - [SSID Oracle Attack on Undisclosed Wi-Fi Preferred Network Lists](#ssid-oracle-attack-on-undisclosed-wi-fi-preferred-network-lists)
       - [WEP attack fragmentation - chopchop](#wep-attack-fragmentation---chopchop)
+      - [WiFi security: history of insecurities in WEP, WPA and WPA2](#wifi-security-history-of-insecurities-in-wep-wpa-and-wpa2)
 - [Tools](#tools)
 - [Defenses](#defenses)
       - [KARMA Attack detection](#karma-attack-detection)
@@ -400,6 +401,7 @@ aireplay-ng -0 100 -a BSSID -c STA/CLIENT wlan1
 ```
 
 # WPS Pin
+[Research paper](https://sviehb.files.wordpress.com/2011/12/viehboeck_wps.pdf)
 
 Checking within a capture the WLAN with WPS enable
 ```
@@ -1309,6 +1311,9 @@ The main goal is to create an interesting enough SSID in order for a victim to c
 #### WEP attack fragmentation - chopchop
 - https://github.com/DominikStyp/WEP-attack
 
+#### WiFi security: history of insecurities in WEP, WPA and WPA2
+- https://security.blogoverflow.com/2013/08/wifi-security-history-of-insecurities-in-wep-wpa-and-wpa2/
+
 # Tools
 - https://github.com/derv82/wifite2
 - https://github.com/sensepost/berate_ap
@@ -1330,3 +1335,4 @@ The main goal is to create an interesting enough SSID in order for a victim to c
 
 #### KARMA Attack detection
 - https://github.com/AlexLynd/WiFi-Pineapple-Detector
+
