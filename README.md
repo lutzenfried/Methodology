@@ -10,9 +10,9 @@ Offensive Security Testing methodologies for security professionals, penetration
 
 #### 3- Wi-Fi Penetration Testing
 
-#### 4- ATM / Kiosks Penetration Testing
+#### [4- ATM / Kiosks / Laptop Penetration Testing](./04-%20ATM%20Kiosks%20Laptops.md)
 
-#### 5- Physical Penetration Testing
+#### 5- [Physical Penetration Testing](./05-%20Physical%20Intrusion.md)
 
 #### 6- IoT Penetration Testing
 
