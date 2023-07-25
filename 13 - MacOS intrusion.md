@@ -1,17 +1,72 @@
-# ATM - Kiosks - Laptop host testing
+- [MacOS Intrusion](#macos-intrusion)
+    - [MacOS 101](#macos-101)
+    - [Initial Access](#initial-access)
+      - [Installer Package](#installer-package)
+      - [App Bundles/Package](#app-bundlespackage)
+      - [AppleScript URL](#applescript-url)
+      - [2FA Phishing](#2fa-phishing)
+      - [MacOS payload generator](#macos-payload-generator)
+      - [Phishing using office](#phishing-using-office)
+      - [C2](#c2)
+    - [User Persistence](#user-persistence)
+      - [Plist - (LaunchAgents)](#plist---launchagents)
+      - [Login items](#login-items)
+      - [Folder action scripts](#folder-action-scripts)
+      - [JXA persistence](#jxa-persistence)
+      - [Swift persistence scripts](#swift-persistence-scripts)
+      - [Authorization Plugin](#authorization-plugin)
+      - [Dock shortcut modification](#dock-shortcut-modification)
+      - [Atom Init script](#atom-init-script)
+      - [SSHrc persistence](#sshrc-persistence)
+      - [Vim plugin](#vim-plugin)
+      - [Sublim text app script](#sublim-text-app-script)
+      - [ZSH profile](#zsh-profile)
+      - [XBar Plugin](#xbar-plugin)
+    - [Root Persistence](#root-persistence)
+      - [Launch Daemons](#launch-daemons)
+      - [Emond](#emond)
+      - [Dylib persistence](#dylib-persistence)
+    - [Privilege Escalation](#privilege-escalation)
+      - [System creds](#system-creds)
+      - [Terminal history](#terminal-history)
+      - [Chrome "Cookie Crimes"](#chrome-cookie-crimes)
+      - [Helper tool](#helper-tool)
+      - [Prompt phishing](#prompt-phishing)
+    - [Lateral movement](#lateral-movement)
+      - [MacHound](#machound)
+      - [BiFrost](#bifrost)
+      - [SwiftBelt](#swiftbelt)
+      - [Living Of the Orchard Bins](#living-of-the-orchard-bins)
+    - [Credential Access](#credential-access)
+      - [Keychain](#keychain)
+      - [Phishing using prompt](#phishing-using-prompt)
+    - [Exfiltration](#exfiltration)
+      - [Exfiltrate Google Services](#exfiltrate-google-services)
+      - [Exfiltrating Jira](#exfiltrating-jira)
+      - [Slack exfiltration](#slack-exfiltration)
+      - [Impact](#impact)
+    - [MacOS Security Features](#macos-security-features)
+      - [Code Signing](#code-signing)
+      - [Entitlements](#entitlements)
+      - [System Integrity Protection (SIP)](#system-integrity-protection-sip)
+      - [TCC](#tcc)
+      - [Quarantine](#quarantine)
+      - [GateKeeper](#gatekeeper)
+      - [XProtect](#xprotect)
+      - [Extended Attributes](#extended-attributes)
+      - [Application sandbox](#application-sandbox)
+      - [Notarization](#notarization)
+      - [Apple Endpoint Security Framework](#apple-endpoint-security-framework)
+    - [Offensive MacOS - Training / Cert](#offensive-macos---training--cert)
+      - [HITB - Exploiting Directory PErmissions on MacOS](#hitb---exploiting-directory-permissions-on-macos)
+      - [Objective-See](#objective-see)
+      - [Offensive MacOs Repo](#offensive-macos-repo)
+      - [DEF CON 29 - Cedric Owens - Gone Apple Pickin: Red Teaming MacOS Environments in 2021](#def-con-29---cedric-owens---gone-apple-pickin-red-teaming-macos-environments-in-2021)
+      - [CVE-2021-30657 - Patrick Wardle Explanation (Objective-See)](#cve-2021-30657---patrick-wardle-explanation-objective-see)
+      - [Awesome MacOS Red Teaming](#awesome-macos-red-teaming)
+      - [Mac Security Conference](#mac-security-conference)
 
-## Citrix (VDI/VDE)
-
-## ATM / Kiosks
-
-## Windows
-- WDAC / AppLocker / Device Guard
-- Credential guard
-- AaronLocker
-
-https://blog.cybercx.co.nz/bypassing-bios-password
-
-## MacOS
+# MacOS Intrusion
 
 [Mitre MacOS Matrix](https://attack.mitre.org/matrices/enterprise/macos/)
 
