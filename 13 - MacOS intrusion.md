@@ -11,10 +11,12 @@
     - [User Persistence](#user-persistence)
       - [Plist - (LaunchAgents)](#plist---launchagents)
       - [Login items](#login-items)
+      - [Login/Logout Hooks](#loginlogout-hooks)
+      - [CronJobs](#cronjobs)
       - [Folder action scripts](#folder-action-scripts)
       - [JXA persistence](#jxa-persistence)
       - [Swift persistence scripts](#swift-persistence-scripts)
-      - [Authorization Plugin](#authorization-plugin)
+      - [Authorization Plugins](#authorization-plugins)
       - [Dock shortcut modification](#dock-shortcut-modification)
       - [Atom Init script](#atom-init-script)
       - [SSHrc persistence](#sshrc-persistence)
@@ -113,10 +115,22 @@ Payload execution will probably be sandboxed.
 - https://github.com/kareman/SwiftShell
 - https://github.com/cedowens/MacC2 
 
+
+
+
+
+
+
 ### User Persistence
+--> Main blog for persistence techniques: - https://theevilbit.github.io/beyond/beyond_intro/
+
 #### Plist - (LaunchAgents)
-- https://theevilbit.github.io/beyond/beyond_intro/
+
 #### Login items
+
+#### Login/Logout Hooks
+
+#### CronJobs
 
 #### Folder action scripts
 
@@ -126,7 +140,7 @@ Payload execution will probably be sandboxed.
 #### Swift persistence scripts
 - https://github.com/cedowens/Persistent-Swift
 
-#### Authorization Plugin
+#### Authorization Plugins
 
 #### Dock shortcut modification
 
@@ -152,8 +166,20 @@ Payload execution will probably be sandboxed.
 
 #### Dylib persistence
 
+
+
+
+
+
 ### Privilege Escalation
 - https://ofiralmkias.medium.com/bypassing-macos-sandbox-performing-privilege-escalation-and-more-2a020efd7ceb
+
+Check if current user is local admin
+```
+id
+dscl . list groups
+dscl . read groups/admin
+```
 
 #### System creds
 - aws
@@ -264,6 +290,9 @@ Quarantine Attribute - q attr.
 
 --> Using **curl** does not append the quarantine attribute to the file.  
 
+- https://eclecticlight.co/2019/04/25/%f0%9f%8e%97-quarantine-apps/
+- https://eclecticlight.co/2019/05/27/is-a-mac-os-x-gatekeeper-bypass-what-it-says/
+
 #### GateKeeper
 
 #### XProtect
@@ -282,7 +311,11 @@ Deleting quarantine attributes for a file
 $ xattr -d com.apple.quarantine downloadedFile
 $ xattr downloadedFile
 com.apple.metadata:kMDItemWhereFroms
+```
 
+Deleting recursively
+```
+$ xattr -r -d com.apple.quarantine /path/to/MyApp.app
 ```
 
 
@@ -364,3 +397,11 @@ Explanation of some MacOS security feature - Quarantine / GateKeeper / Notarizat
 - https://github.com/usnistgov/macos_security#readme
 - https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-219r1.pdf
 - https://www.youtube.com/watch?v=RKidBayaM7c
+- https://www.youtube.com/watch?v=pOQOh07eMxY
+- https://www.youtube.com/watch?v=IPFpyulNcRQ
+- https://www.youtube.com/watch?v=W9GxnP8c8FU
+- https://www.youtube.com/watch?v=fMRT8mPMJUs
+- https://www.youtube.com/watch?v=W9GxnP8c8FU
+- https://www.youtube.com/watch?v=a9hsxPdRxsY
+- https://www.youtube.com/watch?v=cAl7epCq0q4
+- https://theevilbit.github.io/beyond/beyond_intro/

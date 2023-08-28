@@ -2038,6 +2038,7 @@ https://www.truesec.com/hub/blog/from-stranger-to-da-using-petitpotam-to-ntlm-re
 https://www.ravenswoodtechnology.com/protect-your-windows-network-from-the-petitpotam-exploit/
 - ADCS
 https://ppn.snovvcrash.rocks/pentest/infrastructure/ad/ad-cs-abuse#domain-escalation-via-certificates
+https://www.youtube.com/watch?v=-KuCaJXSyXA
 https://github.com/ly4k/Certipy
 - adsecurity all
 - Wdigest
