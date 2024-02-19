@@ -97,6 +97,7 @@
       - [Denial of Service against WPA3-SAE](#denial-of-service-against-wpa3-sae)
       - [WPA3-EAP - Invalid curve attack](#wpa3-eap---invalid-curve-attack)
       - [WPA3-EAP - Reflection attack](#wpa3-eap---reflection-attack)
+  - [WPA3-Enterprise](#wpa3-enterprise)
 - [Wi-Fi Hacking Mind Map](#wi-fi-hacking-mind-map)
 - [Other Attacks](#other-attacks)
     - [Fake Captive Portal](#fake-captive-portal)
@@ -121,6 +122,7 @@
 - [Tools](#tools)
 - [Defenses](#defenses)
       - [KARMA Attack detection](#karma-attack-detection)
+
 
 # WLAN basics
 ## Frequency / bands / Channels
