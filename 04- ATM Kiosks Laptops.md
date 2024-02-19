@@ -12,3 +12,5 @@
 https://blog.cybercx.co.nz/bypassing-bios-password
 
 https://www.errno.fr/BypassingBitlocker
+
+https://pulsesecurity.co.nz/advisories/tpm-luks-bypass

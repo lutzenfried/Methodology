@@ -1146,6 +1146,8 @@ Dragonforce: This is an experimental tool which makes the information recover fr
 
 ### Attacking WPA3
 
+Great [YouTube video](https://www.youtube.com/watch?v=mjePCRkNb00) from [Clear To Send Channel](https://www.youtube.com/@ClearToSend) for WPA3 specification explanation: https://www.youtube.com/watch?v=mjePCRkNb00
+
 #### WPA3-Transition Downgrade Attack
 Allow non WPA3-SAE compliant device to connect using WPA2-PSK.  
 --> **Issue**: WPA2 clients and WPA3 clients will use the same secret passphrase.  
@@ -1225,6 +1227,12 @@ network={
 ```
 sudo ./dragonslayer-client.sh -i wlp2s0 -a 0
 ```
+
+## WPA3-Enterprise
+- https://mrncciew.com/2020/08/17/wpa3-enterprise/
+
+AKM Value defined in the IEEE-802.11 REVmd ( Revision of 802.11-2016 standard which is going to be 802.11-2020). Note that AKM 8 & 9 used with SAE (WPA3- Personal use AKM 8), AKM 1,3,5,11 (WPA3-Enterprise only or WPA3-Enterprise transition), AKM 12,13 (WPA3-Enterprise 192-bit) & AKM 18 for Enhanced Open (OWE).
+![alt text](image.png)
 
 # Wi-Fi Hacking Mind Map
 

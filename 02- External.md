@@ -56,6 +56,7 @@
         - [IP rotation](#ip-rotation)
       - [2FA/MFA implementation issues](#2famfa-implementation-issues)
   - [Resources](#resources)
+      - [Attacking MS Exchange](#attacking-ms-exchange)
       - [FOREGENIX : Know your attack surfaces](#foregenix--know-your-attack-surfaces)
       - [Offensive OSINT](#offensive-osint)
       - [OSINT Resources](#osint-resources)
@@ -427,6 +428,9 @@ Re-using valid credentials on alternate services
 - https://medium.com/proferosec-osm/multi-factor-authentication-in-the-wild-bypass-methods-689f53f0b62b
 
 ## Resources
+
+#### Attacking MS Exchange
+- https://swarm.ptsecurity.com/attacking-ms-exchange-web-interfaces/
 
 #### FOREGENIX : Know your attack surfaces
 - https://www.foregenix.com/blog/know-your-attack-surfaces

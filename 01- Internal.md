@@ -57,10 +57,12 @@
         - [AD user password modification using rpcclient](#ad-user-password-modification-using-rpcclient)
         - [RPC password spraying](#rpc-password-spraying)
     - [Kerberoasting](#kerberoasting)
+    - [Kerberos Delegation](#kerberos-delegation)
     - [Kerberos Bronze Bit](#kerberos-bronze-bit)
     - [Abusing Vulnerable GPO](#abusing-vulnerable-gpo)
     - [Abusing MS-SQL Service](#abusing-ms-sql-service)
     - [Relay attacks](#relay-attacks)
+      - [NetNTLMv1 Downgrade attack](#netntlmv1-downgrade-attack)
       - [Stealing NetNTLM hashes via outlook signatures](#stealing-netntlm-hashes-via-outlook-signatures)
     - [Drop the MIC CVE-2019-1040](#drop-the-mic-cve-2019-1040)
     - [Exploiting ACL over GPO](#exploiting-acl-over-gpo)
@@ -124,7 +126,7 @@
     - [Over-Pass-The-hash](#over-pass-the-hash)
     - [Pass The ticket](#pass-the-ticket)
     - [Silver ticket](#silver-ticket)
-    - [Kerberos Delegation](#kerberos-delegation)
+    - [Kerberos Delegation](#kerberos-delegation-1)
       - [Exploiting RBCD : MachineAccountQuota](#exploiting-rbcd--machineaccountquota)
       - [Exploiting RBCD : WRITE Priv](#exploiting-rbcd--write-priv)
     - [From On-Premise to Azure](#from-on-premise-to-azure)
@@ -204,7 +206,7 @@
       - [PetitPotam and ADCS](#petitpotam-and-adcs)
       - [Active Directory Exploitation cheatsheet](#active-directory-exploitation-cheatsheet)
       - [Attacking Active Directory](#attacking-active-directory)
-      - [Kerberos Delegation](#kerberos-delegation-1)
+      - [Kerberos Delegation](#kerberos-delegation-2)
       - [Exceptional blog posts regarding Windows Authentication/Credentials/RDP](#exceptional-blog-posts-regarding-windows-authenticationcredentialsrdp)
       - [Windows Logon Types](#windows-logon-types)
       - [Windows Name Pipes](#windows-name-pipes)
@@ -655,6 +657,9 @@ hashcat -m 13100 --force -a 0 hashes.kerberoast passwords_kerb.txt
 --> To protect against this attack, we must avoid having *SPN* on user accounts, in favor of machine accounts.  
 --> If it is necessary, we should use Microsoft’s Managed Service Accounts (MSA) feature, ensuring that the account password is robust and changed regularly and automatically
 
+### Kerberos Delegation
+- https://www.youtube.com/watch?v=7_iv_eaAFyQ
+
 ### Kerberos Bronze Bit
 https://www.netspi.com/blog/technical/network-penetration-testing/cve-2020-17049-kerberos-bronze-bit-overview/
 https://www.netspi.com/blog/technical/network-penetration-testing/cve-2020-17049-kerberos-bronze-bit-theory/
@@ -679,6 +684,9 @@ Import-Module .\powercat.ps1 powercat -l -v -p 443 -t 10000
 
 ### Relay attacks
 <img src="./images/smb_relay.png" width="700"/>
+
+#### NetNTLMv1 Downgrade attack
+- https://www.r-tec.net/r-tec-blog-netntlmv1-downgrade-to-compromise.html
 
 #### Stealing NetNTLM hashes via outlook signatures
 - https://research.nccgroup.com/2021/01/15/sign-over-your-hashes-stealing-netntlm-hashes-via-outlook-signatures/
@@ -1132,6 +1140,15 @@ certutil.exe -config - -ping
 - https://ppn.snovvcrash.rocks/pentest/infrastructure/ad/ad-cs-abuse
 - https://github.com/PKISolutions/PSPKI
 - https://www.exandroid.dev/2021/06/23/ad-cs-relay-attack-practical-guide/
+
+#### ESC1 - 
+
+- msPKI-enrollment-flag	: Whether CA manager approval is required
+- Authorized signatures : required	How many authorized signatures are required to sign this certificate
+- PKI-extended-key-usage : What the certificate can be used for (for example, code signing and client authentication)
+- msPKI-certificate-name-flag	: Whether the certificate be requested on behalf of another party
+- Enrollment permissions : Who can request a certificate with this template
+
 
 ### ADCS WebDav + NTLM relay to LDAP
 - https://twitter.com/tifkin_/status/1418855927575302144/photo/1
