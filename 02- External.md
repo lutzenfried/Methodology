@@ -75,6 +75,8 @@ https://github.com/j3ssie/metabigor
 
 - Very complete and Great OSINT Blog
 https://start.me/p/ZME8nR/osint
+- Xquik
+https://github.com/Xquik-dev/x-twitter-scraper
 
 ## Reconnaissance
 ### Passive External Network Reconnaissance
@@ -156,7 +158,7 @@ echo "144.178.0.0/10" | tlsx -san
 ##### Subdomain enumeration
 - DNS brute force (aiodnsbrute, subLocal)
 
-- DNS Recon ([amass](https://github.com/OWASP/Amass), [sublist3r](https://github.com/aboul3la/Sublist3r))
+- DNS Recon ([amass](https://github.com/owasp-amass/amass), [sublist3r](https://github.com/aboul3la/Sublist3r))
 https://0xffsec.com/handbook/information-gathering/subdomain-enumeration/#asn-enumeration
 
 A (script)[https://github.com/appsecco/the-art-of-subdomain-enumeration/blob/master/san_subdomain_enum.py] to extract sub-domains from Subject Alternate Name(SAN) in X.509 certs 
